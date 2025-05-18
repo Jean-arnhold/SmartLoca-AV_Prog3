@@ -11,7 +11,7 @@
     <!-- Cabeçalho -->
     <div class="flex justify-between items-center mb-6">
       <h1 class="text-2xl font-bold">🚗 Gerenciar Veículos</h1>
-      <a href="index.html" class="text-blue-600 hover:underline">Voltar</a>
+      <a href="index.html" class="text-orange-600 hover:underline">Voltar</a>
     </div>
 
     <!-- Formulário de cadastro -->
@@ -20,12 +20,12 @@
       <form id="carForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <input type="hidden" id="carId">
         <div>
-          <label class="block text-sm font-medium mb-1">Modelo</label>
-          <input type="text" id="carModel" class="w-full p-2 border rounded" required>
-        </div>
-        <div>
           <label class="block text-sm font-medium mb-1">Marca</label>
           <input type="text" id="carBrand" class="w-full p-2 border rounded" required>
+        </div>
+        <div>
+          <label class="block text-sm font-medium mb-1">Modelo</label>
+          <input type="text" id="carModel" class="w-full p-2 border rounded" required>
         </div>
         <div>
           <label class="block text-sm font-medium mb-1">Ano</label>
@@ -36,10 +36,6 @@
           <input type="text" id="carPlate" class="w-full p-2 border rounded" required>
         </div>
         <div>
-          <label class="block text-sm font-medium mb-1">Cor</label>
-          <input type="text" id="carColor" class="w-full p-2 border rounded" required>
-        </div>
-        <div>
           <label class="block text-sm font-medium mb-1">Status</label>
           <select id="carStatus" class="w-full p-2 border rounded" required>
             <option value="Disponível">Disponível</option>
@@ -47,7 +43,7 @@
             <option value="Manutenção">Manutenção</option>
           </select>
         </div>
-        <button type="submit" class="md:col-span-2 bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
+        <button type="submit" class="md:col-span-2 bg-orange-500 text-white p-2 rounded hover:bg-orange-600">
           Salvar Veículo
         </button>
       </form>
