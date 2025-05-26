@@ -14,40 +14,41 @@
       <a href="index.html" class="text-orange-600 hover:underline">Voltar</a>
     </div>
 
-    <!-- Formulário de nova locação -->
-    <div class="bg-white p-4 rounded-lg shadow mb-6">
+    <div class="bg-white p-6 rounded-lg shadow mb-6">
       <h2 class="font-semibold mb-3" id="locationFormTitle">Nova Locação</h2>
       <form id="locationForm" class="grid grid-cols-1 gap-4">
-        <input type="hidden" id="locationId">
-        <div>
-          <label class="block text-sm font-medium mb-1">Cliente</label>
-          <select id="locationClient" class="w-full p-2 border rounded" required>
-            <option value="">Selecione um cliente</option>
-            <!-- Clientes serão carregados via JavaScript -->
-          </select>
+      <input type="hidden" id="locationId">
+    <div>
+        <label class="block text-sm font-medium mb-1">Cliente</label>
+        <select id="locationClient" class="w-full p-2 border rounded" required>
+          <option value="">Selecione um cliente</option>
+        </select>
+      </div>
+    <div>
+        <label class="block text-sm font-medium mb-1">Veículo</label>
+        <select id="locationCar" class="w-full p-2 border rounded" required>
+          <option value="">Selecione um veículo</option>
+        </select>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+          <label class="block text-sm font-medium mb-1">Data de Retirada</label>
+          <input type="date" id="locationStart" class="w-full p-2 border rounded" required>
         </div>
-        <div>
-          <label class="block text-sm font-medium mb-1">Veículo</label>
-          <select id="locationCar" class="w-full p-2 border rounded" required>
-            <option value="">Selecione um veículo</option>
-            <!-- Veículos serão carregados via JavaScript -->
-          </select>
+      <div>
+          <label class="block text-sm font-medium mb-1">Data de Devolução</label>
+          <input type="date" id="locationEnd" class="w-full p-2 border rounded" required>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label class="block text-sm font-medium mb-1">Data de Retirada</label>
-            <input type="date" id="locationStart" class="w-full p-2 border rounded" required>
-          </div>
-          <div>
-            <label class="block text-sm font-medium mb-1">Data de Devolução</label>
-            <input type="date" id="locationEnd" class="w-full p-2 border rounded" required>
-          </div>
-        </div>
-        <button type="submit" class="bg-orange-500 text-white p-2 rounded hover:bg-orange-600">
-          Registrar Locação
-        </button>
-      </form>
-    </div>
+      </div>
+    <div>
+        <label class="block text-sm font-medium mb-1">Valor da locação</label>
+        <input type="number" id="locationValue" class="w-full p-2 border rounded" required>
+      </div>
+      <button type="submit" class="bg-orange-500 text-white p-2 rounded hover:bg-orange-600">
+        Registrar Locação
+      </button>
+    </form>
+  </div>
 
     <!-- Lista de locações -->
     <div class="bg-white p-4 rounded-lg shadow">
@@ -57,9 +58,12 @@
           <thead>
             <tr class="bg-gray-100">
               <th class="p-2 text-left">Cliente</th>
-              <th class="p-2 text-left">Veículo</th>
-              <th class="p-2 text-left">Período</th>
-              <th class="p-2 text-left">Ações</th>
+              <th class="p-2 text-center">Veículo</th>
+              <th class="p-2 text-center">Período</th>
+              <th class="p-2 text-center">Valor</th>
+              <th class="p-2 text-center" colspan="2">Ações</th>
+
+
             </tr>
           </thead>
           <tbody id="locationsList">
