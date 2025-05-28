@@ -5,65 +5,82 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Locações - Locadora</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background-color: #2c2c31;
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: #727275;
+      border-radius: 4px;
+    }
+  </style>
 </head>
-<body class="bg-gray-50 min-h-screen p-4">
+<body class="bg-[url('../carro-luxuoso-estacionado-na-estrada-com-um-farol-iluminado-ao-por-sol.jpg')] bg-no-repeat bg-center bg-cover min-h-screen text-white">
   <div class="max-w-3xl mx-auto">
+
     <!-- Cabeçalho -->
-    <div class="flex justify-between items-center mb-6">
+    <div class="flex justify-between items-center mb-6 mt-4">
       <h1 class="text-2xl font-bold">📋 Gerenciar Locações</h1>
-      <a href="index.html" class="text-orange-600 hover:underline">Voltar</a>
+      <a href="index.html" class="text-white hover:underline">Voltar</a>
     </div>
 
-    <div class="bg-white p-6 rounded-lg shadow mb-6">
+    <!-- Formulário de locação -->
+    <div class="bg-black/70 p-6 rounded-lg shadow mb-6">
       <h2 class="font-semibold mb-3" id="locationFormTitle">Nova Locação</h2>
       <form id="locationForm" class="grid grid-cols-1 gap-4">
-      <input type="hidden" id="locationId">
-    <div>
-        <label class="block text-sm font-medium mb-1">Cliente</label>
-        <select id="locationClient" class="w-full p-2 border rounded" required>
-          <option value="">Selecione um cliente</option>
-        </select>
-      </div>
-    <div>
-        <label class="block text-sm font-medium mb-1">Veículo</label>
-        <select id="locationCar" class="w-full p-2 border rounded" required>
-          <option value="">Selecione um veículo</option>
-        </select>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div>
-          <label class="block text-sm font-medium mb-1">Data de Retirada</label>
-          <input type="date" id="locationStart" class="w-full p-2 border rounded" required>
+        <input type="hidden" id="locationId">
+
+        <div>
+          <label class="block text-sm font-medium mb-1">Cliente</label>
+          <select id="locationClient" class="w-full p-2 border rounded bg-white text-black" required>
+            <option value="">Selecione um cliente</option>
+          </select>
         </div>
-      <div>
-          <label class="block text-sm font-medium mb-1">Data de Devolução</label>
-          <input type="date" id="locationEnd" class="w-full p-2 border rounded" required>
+
+        <div>
+          <label class="block text-sm font-medium mb-1">Veículo</label>
+          <select id="locationCar" class="w-full p-2 border rounded bg-white text-black" required>
+            <option value="">Selecione um veículo</option>
+          </select>
         </div>
-      </div>
-    <div>
-        <label class="block text-sm font-medium mb-1">Valor da locação</label>
-        <input type="number" id="locationValue" class="w-full p-2 border rounded" required>
-      </div>
-      <button type="submit" class="bg-orange-500 text-white p-2 rounded hover:bg-orange-600">
-        Registrar Locação
-      </button>
-    </form>
-  </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium mb-1">Data de Retirada</label>
+            <input type="date" id="locationStart" class="w-full p-2 border rounded bg-white text-black" required>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Data de Devolução</label>
+            <input type="date" id="locationEnd" class="w-full p-2 border rounded bg-white text-black" required>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium mb-1">Valor da locação</label>
+          <input type="number" id="locationValue" class="w-full p-2 border rounded bg-white text-black" required>
+        </div>
+
+        <button type="submit" class="bg-orange-500 text-white p-2 rounded hover:bg-orange-600">
+          Registrar Locação
+        </button>
+      </form>
+    </div>
 
     <!-- Lista de locações -->
-    <div class="bg-white p-4 rounded-lg shadow">
+    <div class="bg-black/70 p-4 rounded-lg shadow">
       <h2 class="font-semibold mb-3">Locações Ativas</h2>
       <div class="overflow-x-auto">
-        <table class="min-w-full" id="locationsTable">
+        <table class="min-w-full text-white" id="locationsTable">
           <thead>
-            <tr class="bg-gray-100">
+            <tr class="bg-gray-800">
               <th class="p-2 text-left">Cliente</th>
               <th class="p-2 text-center">Veículo</th>
               <th class="p-2 text-center">Período</th>
               <th class="p-2 text-center">Valor</th>
               <th class="p-2 text-center" colspan="2">Ações</th>
-
-
             </tr>
           </thead>
           <tbody id="locationsList">
@@ -73,6 +90,7 @@
       </div>
     </div>
   </div>
+
   <script src="../js/locations.js"></script>
 </body>
 </html>
