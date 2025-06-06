@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let clients = [];
 
-  // Carrega os dados do JSON
+
   fetch("../data/locadora.json")
     .then(res => res.json())
     .then(data => {

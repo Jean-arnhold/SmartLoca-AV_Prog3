@@ -8,9 +8,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let clientes = [];
   let carros = [];
   let locacoes = [];
-  let editandoId = null; // variável corrigida
+  let editandoId = null; 
 
-  // Carrega os dados do JSON
   fetch("../data/locadora.json")
     .then(res => res.json())
     .then(data => {
@@ -78,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
     locacoes = locacoes.filter(l => l.id !== id);
     renderLocacoes();
 
-    // Atualiza a lista de carros disponíveis
+  
     preencherSelectCarros();
   };
 
@@ -90,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     locationClient.value = loc.cliente_id;
 
-    // Mostrar todos os carros para permitir editar qualquer um
+
     locationCar.innerHTML = '<option value="">Selecione um veículo</option>';
     carros.forEach(carro => {
       const opt = document.createElement("option");
@@ -103,7 +102,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("locationStart").value = loc.data_inicio;
     document.getElementById("locationEnd").value = loc.data_fim;
 
-    // Adiciona o campo de valor se ainda não estiver no HTML
     if (!document.getElementById("locationValue")) {
       const valorInput = document.createElement("input");
       valorInput.type = "number";
