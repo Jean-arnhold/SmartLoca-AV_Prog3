@@ -1,17 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
   const clientForm = document.getElementById("clientForm");
   const clientsList = document.getElementById("clientsList");
+  const formTitle = document.getElementById("formTitle");
+  const clientIdInput = document.getElementById("clientId");
 
+  const API_URL = 'http://localhost:3000/api';
   let clients = [];
 
-
-  fetch("../data/locadora.json")
-    .then(res => res.json())
-    .then(data => {
-      clients = data.clientes;
-      renderClients();
-    });
-
+  // Função para renderizar os clientes na tabela
   function renderClients() {
     clientsList.innerHTML = "";
     clients.forEach(client => {
@@ -31,46 +27,82 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // Função para buscar os clientes da API
+  function fetchClients() {
+    fetch(`${API_URL}/clientes`)
+      .then(res => res.json())
+      .then(data => {
+        clients = data;
+        renderClients();
+      })
+      .catch(err => console.error("Erro ao buscar clientes:", err));
+  }
+
+  // Função para popular o formulário para edição
   window.editClient = (id) => {
     const client = clients.find(c => c.id === id);
     if (client) {
-      document.getElementById("clientId").value = client.id;
+      clientIdInput.value = client.id;
       document.getElementById("clientName").value = client.nome;
       document.getElementById("clientCpf").value = client.cpf;
       document.getElementById("clientPhone").value = client.telefone;
       document.getElementById("clientEmail").value = client.email;
-      document.getElementById("formTitle").textContent = "Editar Cliente";
+      formTitle.textContent = "Editar Cliente";
     }
   };
 
+  // Função para deletar um cliente
   window.deleteClient = (id) => {
-    clients = clients.filter(c => c.id !== id);
-    renderClients();
+    if (confirm("Tem certeza que deseja excluir este cliente?")) {
+      fetch(`${API_URL}/clientes/${id}`, {
+        method: 'DELETE',
+      })
+      .then(res => {
+        if (!res.ok) {
+          return res.json().then(err => { throw new Error(err.message) });
+        }
+        fetchClients(); // Atualiza a lista
+      })
+      .catch(err => alert(`Erro ao excluir cliente: ${err.message}`));
+    }
   };
 
+  // Evento de submit do formulário (para criar e editar)
   clientForm.addEventListener("submit", (e) => {
     e.preventDefault();
-    const id = parseInt(document.getElementById("clientId").value);
-    const nome = document.getElementById("clientName").value;
-    const cpf = document.getElementById("clientCpf").value;
-    const telefone = document.getElementById("clientPhone").value;
-    const email = document.getElementById("clientEmail").value;
+    const id = parseInt(clientIdInput.value);
+    const clientData = {
+      nome: document.getElementById("clientName").value,
+      cpf: document.getElementById("clientCpf").value,
+      telefone: document.getElementById("clientPhone").value,
+      email: document.getElementById("clientEmail").value,
+    };
 
-    if (id) {
-      const client = clients.find(c => c.id === id);
-      if (client) {
-        client.nome = nome;
-        client.cpf = cpf;
-        client.telefone = telefone;
-        client.email = email;
+    const method = id ? 'PUT' : 'POST';
+    const url = id ? `${API_URL}/clientes/${id}` : `${API_URL}/clientes`;
+
+    fetch(url, {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(clientData),
+    })
+    .then(res => {
+      if (!res.ok) {
+        return res.json().then(err => { throw new Error(err.message || "Erro ao salvar") });
       }
-    } else {
-      const newId = clients.length ? Math.max(...clients.map(c => c.id)) + 1 : 1;
-      clients.push({ id: newId, nome, cpf, telefone, email });
-    }
-
-    clientForm.reset();
-    document.getElementById("formTitle").textContent = "Adicionar Novo Cliente";
-    renderClients();
+      return res.json();
+    })
+    .then(() => {
+      clientForm.reset();
+      clientIdInput.value = '';
+      formTitle.textContent = "Adicionar Novo Cliente";
+      fetchClients(); // Atualiza a lista
+    })
+    .catch(err => alert(`Erro ao salvar cliente: ${err.message}`));
   });
+
+  // Busca os clientes iniciais quando a página carrega
+  fetchClients();
 });

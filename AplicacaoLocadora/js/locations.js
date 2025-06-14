@@ -1,61 +1,27 @@
 document.addEventListener("DOMContentLoaded", () => {
   const locationForm = document.getElementById("locationForm");
   const locationsList = document.getElementById("locationsList");
+  const locationClientSelect = document.getElementById("locationClient");
+  const locationCarSelect = document.getElementById("locationCar");
+  const locationIdInput = document.getElementById("locationId");
 
-  const locationClient = document.getElementById("locationClient");
-  const locationCar = document.getElementById("locationCar");
-
+  const API_URL = 'http://localhost:3000/api';
+  let locacoes = [];
   let clientes = [];
   let carros = [];
-  let locacoes = [];
-  let editandoId = null; 
-
-  fetch("../data/locadora.json")
-    .then(res => res.json())
-    .then(data => {
-      clientes = data.clientes;
-      carros = data.carros;
-      locacoes = data.locacoes;
-
-      preencherSelectClientes();
-      preencherSelectCarros();
-      renderLocacoes();
-    });
-
-  function preencherSelectClientes() {
-    locationClient.innerHTML = '<option value="">Selecione um cliente</option>';
-    clientes.forEach(cliente => {
-      const opt = document.createElement("option");
-      opt.value = cliente.id;
-      opt.textContent = cliente.nome;
-      locationClient.appendChild(opt);
-    });
-  }
-
-  function preencherSelectCarros() {
-    locationCar.innerHTML = '<option value="">Selecione um veículo</option>';
-    carros
-      .filter(carro => carro.disponivel)
-      .forEach(carro => {
-        const opt = document.createElement("option");
-        opt.value = carro.id;
-        opt.textContent = `${carro.modelo} (${carro.placa})`;
-        locationCar.appendChild(opt);
-      });
-  }
 
   function renderLocacoes() {
     locationsList.innerHTML = "";
     locacoes.forEach(loc => {
-      const cliente = clientes.find(c => c.id === loc.cliente_id);
-      const carro = carros.find(c => c.id === loc.carro_id);
-
+      const clienteNome = loc.Cliente ? loc.Cliente.nome : "N/A";
+      const carroDesc = loc.Carro ? `${loc.Carro.modelo} (${loc.Carro.placa})` : "N/A";
+      
       const row = document.createElement("tr");
       row.innerHTML = `
-        <td class="p-2">${cliente?.nome || "N/A"}</td>
-        <td class="p-2">${carro ? `${carro.modelo} (${carro.placa})` : "N/A"}</td>
+        <td class="p-2">${clienteNome}</td>
+        <td class="p-2">${carroDesc}</td>
         <td class="p-2">${loc.data_inicio} até ${loc.data_fim}</td>
-        <td class="p-2">R$ ${loc.valor_total.toFixed(2)}</td>
+        <td class="p-2">R$ ${parseFloat(loc.valor_total).toFixed(2)}</td>
         <td class="p-2">
           <button class="text-blue-600 hover:underline" onclick="editLocation(${loc.id})">Editar</button>
         </td>
@@ -67,107 +33,115 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  window.deleteLocation = (id) => {
-    const locacao = locacoes.find(l => l.id === id);
-    if (locacao) {
-      // Marca o carro como disponível novamente
-      const carro = carros.find(c => c.id === locacao.carro_id);
-      if (carro) carro.disponivel = true;
-    }
-    locacoes = locacoes.filter(l => l.id !== id);
-    renderLocacoes();
+  function populateClientesSelect() {
+    locationClientSelect.innerHTML = '<option value="">Selecione um cliente</option>';
+    clientes.forEach(cliente => {
+      const opt = document.createElement("option");
+      opt.value = cliente.id;
+      opt.textContent = cliente.nome;
+      locationClientSelect.appendChild(opt);
+    });
+  }
 
-  
-    preencherSelectCarros();
-  };
-
-  window.editLocation = (id) => {
-    const loc = locacoes.find(l => l.id === id);
-    if (!loc) return;
-
-    editandoId = id;
-
-    locationClient.value = loc.cliente_id;
-
-
-    locationCar.innerHTML = '<option value="">Selecione um veículo</option>';
-    carros.forEach(carro => {
+  function populateCarrosSelect() {
+    locationCarSelect.innerHTML = '<option value="">Selecione um veículo</option>';
+    carros.filter(carro => carro.status === 'Disponível').forEach(carro => {
       const opt = document.createElement("option");
       opt.value = carro.id;
       opt.textContent = `${carro.modelo} (${carro.placa})`;
-      locationCar.appendChild(opt);
+      locationCarSelect.appendChild(opt);
     });
+  }
+  
+  function fetchLocacoes() {
+    return fetch(`${API_URL}/locacoes`).then(res => res.json()).then(data => {
+      locacoes = data;
+      renderLocacoes();
+    });
+  }
 
-    locationCar.value = loc.carro_id;
-    document.getElementById("locationStart").value = loc.data_inicio;
-    document.getElementById("locationEnd").value = loc.data_fim;
+  function fetchClientes() {
+    return fetch(`${API_URL}/clientes`).then(res => res.json()).then(data => {
+      clientes = data;
+      populateClientesSelect();
+    });
+  }
 
-    if (!document.getElementById("locationValue")) {
-      const valorInput = document.createElement("input");
-      valorInput.type = "number";
-      valorInput.id = "locationValue";
-      valorInput.className = "w-full p-2 border rounded mt-2";
-      valorInput.placeholder = "Valor Total (R$)";
-      locationForm.insertBefore(valorInput, locationForm.lastElementChild);
+  function fetchCarros() {
+    return fetch(`${API_URL}/carros`).then(res => res.json()).then(data => {
+      carros = data;
+      populateCarrosSelect();
+    });
+  }
+
+  window.editLocation = (id) => {
+    const loc = locacoes.find(l => l.id === id);
+    if (loc) {
+        locationIdInput.value = loc.id;
+        locationClientSelect.value = loc.cliente_id;
+        
+        const carroAtualAlugado = carros.find(c => c.id === loc.carro_id);
+        const carroJaNaLista = Array.from(locationCarSelect.options).some(opt => opt.value == loc.carro_id);
+
+        if (carroAtualAlugado && !carroJaNaLista) {
+            const opt = document.createElement("option");
+            opt.value = carroAtualAlugado.id;
+            opt.textContent = `${carroAtualAlugado.modelo} (${carroAtualAlugado.placa})`;
+            locationCarSelect.appendChild(opt);
+        }
+
+        locationCarSelect.value = loc.carro_id;
+        document.getElementById("locationStart").value = loc.data_inicio;
+        document.getElementById("locationEnd").value = loc.data_fim;
+        document.getElementById("locationValue").value = parseFloat(loc.valor_total);
     }
-    document.getElementById("locationValue").value = loc.valor_total;
+  };
+
+  window.deleteLocation = (id) => {
+    if (confirm("Tem certeza que deseja excluir esta locação?")) {
+      fetch(`${API_URL}/locacoes/${id}`, { method: 'DELETE' })
+      .then(res => {
+        if (!res.ok) throw new Error("Erro ao excluir locação.");
+        Promise.all([fetchLocacoes(), fetchCarros()]);
+      });
+    }
   };
 
   locationForm.addEventListener("submit", (e) => {
     e.preventDefault();
+    const id = parseInt(locationIdInput.value);
+    const locationData = {
+      cliente_id: parseInt(locationClientSelect.value),
+      carro_id: parseInt(locationCarSelect.value),
+      data_inicio: document.getElementById("locationStart").value,
+      data_fim: document.getElementById("locationEnd").value,
+      valor_total: parseFloat(document.getElementById("locationValue").value)
+    };
 
-    const cliente_id = parseInt(locationClient.value);
-    const carro_id = parseInt(locationCar.value);
-    const data_inicio = document.getElementById("locationStart").value;
-    const data_fim = document.getElementById("locationEnd").value;
-    const valor_total = parseFloat(document.getElementById("locationValue")?.value) || 0;
+    const method = id ? 'PUT' : 'POST';
+    const url = id ? `${API_URL}/locacoes/${id}` : `${API_URL}/locacoes`;
 
-    if (data_inicio > data_fim) {
-      alert("Data de devolução deve ser após a data de retirada!");
-      return;
-    }
-
-    if (editandoId) {
-      const loc = locacoes.find(l => l.id === editandoId);
-      if (loc) {
-        // Libera o carro antigo, se foi trocado
-        if (loc.carro_id !== carro_id) {
-          const carroAntigo = carros.find(c => c.id === loc.carro_id);
-          if (carroAntigo) carroAntigo.disponivel = true;
-        }
-        loc.cliente_id = cliente_id;
-        loc.carro_id = carro_id;
-        loc.data_inicio = data_inicio;
-        loc.data_fim = data_fim;
-        loc.valor_total = valor_total;
-      }
-      editandoId = null;
-    } else {
-      const novoId = locacoes.length ? Math.max(...locacoes.map(l => l.id)) + 1 : 1001;
-      locacoes.push({
-        id: novoId,
-        cliente_id,
-        carro_id,
-        data_inicio,
-        data_fim,
-        valor_total
-      });
-    }
-
-    // Marca carro como indisponível
-    const carro = carros.find(c => c.id === carro_id);
-    if (carro) carro.disponivel = false;
-
-    locationForm.reset();
-    if (document.getElementById("locationValue")) {
-      document.getElementById("locationValue").value = "";
-    }
-    preencherSelectCarros();
-    renderLocacoes();
+    fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(locationData),
+    })
+    .then(res => {
+      if (!res.ok) return res.json().then(err => { throw new Error(err.message || "Erro ao salvar") });
+      return res.json();
+    })
+    .then(() => {
+      locationForm.reset();
+      locationIdInput.value = '';
+      Promise.all([fetchLocacoes(), fetchCarros()]);
+    })
+    .catch(err => alert(`Erro ao salvar locação: ${err.message}`));
   });
 
-  // Inicialização da interface
-  locationForm.reset();
-  preencherSelectCarros();
-  renderLocacoes();
+  Promise.all([
+    fetchClientes(),
+    fetchCarros()
+  ]).then(() => {
+    fetchLocacoes();
+  });
 });
