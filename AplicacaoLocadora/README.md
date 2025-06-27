@@ -1,6 +1,6 @@
 # Sistema de Locadora de Veículos - Programação III
 
-Este é um projeto full-stack de um sistema de gerenciamento para uma locadora de veículos, desenvolvido como avaliação (AV2) para a disciplina de Programação III do curso de Análise e Desenvolvimento de Sistemas do IFRS - Câmpus Feliz.
+Este é um projeto de um sistema de gerenciamento para uma locadora de veículos, desenvolvido para a disciplina de Programação III do curso de Análise e Desenvolvimento de Sistemas do IFRS - Câmpus Feliz.
 
 O sistema é composto por um backend em Node.js que serve uma API RESTful e um frontend em HTML, CSS e JavaScript para interação do usuário.
 
@@ -16,7 +16,7 @@ O projeto foi construído com as seguintes tecnologias:
     * **Yup**: Biblioteca para validação de schemas e dados.
 
 * **Frontend**:
-    * HTML5
+    *  **HTML5
     *  **Tailwind CSS (via CDN)**: Framework CSS para estilização.
     *  **JavaScript (Vanilla)**: Manipulação do DOM e comunicação com o backend.
 
@@ -30,7 +30,7 @@ Antes de começar, garanta que você tenha os seguintes softwares instalados em 
 * [Node.js](https://nodejs.org/) (versão LTS recomendada)
 * [NPM](https://www.npmjs.com/) (geralmente instalado junto com o Node.js)
 * [XAMPP](https://www.apachefriends.org/index.html)
-* Um cliente de Git, como o [GitHub Desktop](https://desktop.github.com/).
+
 
 ## Configuração do Ambiente
 
@@ -46,7 +46,7 @@ Siga estes passos para configurar o ambiente de desenvolvimento pela primeira ve
 ### 2. Backend (Servidor Node.js)
 
 1.  Clone este repositório para uma pasta de sua preferência (ex: `C:\Users\SeuUsuario\Documents\GitHub\AplicacaoLocadora`).
-2.  Abra um terminal (CMD, PowerShell, etc.) e navegue até a pasta do projeto que você acabou de clonar.
+2.  Abra um terminal e navegue até a pasta do projeto que você acabou de clonar.
     ```bash
     cd C:\caminho\para\a\pasta\AplicacaoLocadora
     ```
@@ -94,7 +94,7 @@ Com o ambiente configurado, siga estes passos para rodar o sistema completo:
     ```
     http://localhost/AplicacaoLocadora/pages/index.html
     ```
-A aplicação full-stack estará totalmente funcional.
+A aplicação estará totalmente funcional.
 
 ## Funcionalidades Implementadas
 
