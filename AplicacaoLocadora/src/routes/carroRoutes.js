@@ -4,7 +4,7 @@ const carroController = require('../controllers/carroController');
 
 router.get('/', carroController.getAllCarros);
 router.post('/', carroController.createCarro);
-router.put('/:id', carroController.updateCarro); // Rota de atualização
-router.delete('/:id', carroController.deleteCarro); // Rota de exclusão
+router.put('/:id', carroController.updateCarro); 
+router.delete('/:id', carroController.deleteCarro); 
 
 module.exports = router;

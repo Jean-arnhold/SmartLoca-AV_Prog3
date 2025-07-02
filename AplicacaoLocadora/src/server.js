@@ -1,4 +1,4 @@
-// Este é o conteúdo que deve estar dentro de src/server.js
+
 const express = require('express');
 const cors = require('cors');
 const db = require('./models');

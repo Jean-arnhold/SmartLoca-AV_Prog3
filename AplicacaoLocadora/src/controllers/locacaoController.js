@@ -28,14 +28,14 @@ exports.createLocacao = async (req, res) => {
         const { carro_id } = req.body;
 
         const carro = await Carro.findByPk(carro_id, { transaction: t });
-        // *** MUDANÇA AQUI: Verificando o 'status' ao invés de 'disponivel' ***
+        
         if (!carro || carro.status !== 'Disponível') {
             await t.rollback();
             return res.status(400).json({ message: 'Carro não encontrado ou indisponível.' });
         }
 
         const novaLocacao = await Locacao.create(req.body, { transaction: t });
-        // *** MUDANÇA AQUI: Atualizando o 'status' para 'Alugado' ***
+        
         await carro.update({ status: 'Alugado' }, { transaction: t });
 
         await t.commit();
@@ -62,7 +62,7 @@ exports.updateLocacao = async (req, res) => {
         const carroNovoId = req.body.carro_id;
 
         if (carroAntigoId !== carroNovoId) {
-            // *** MUDANÇA AQUI: Atualizando o status do carro antigo e do novo ***
+            
             await Carro.update({ status: 'Disponível' }, { where: { id: carroAntigoId }, transaction: t });
             await Carro.update({ status: 'Alugado' }, { where: { id: carroNovoId }, transaction: t });
         }
@@ -94,7 +94,6 @@ exports.deleteLocacao = async (req, res) => {
             return res.status(404).json({ message: 'Locação não encontrada.' });
         }
 
-        // *** MUDANÇA AQUI: Atualizando o status do carro para 'Disponível' ***
         await Carro.update({ status: 'Disponível' }, { where: { id: locacao.carro_id }, transaction: t });
         
         await locacao.destroy({ transaction: t });
@@ -112,15 +111,30 @@ exports.finalizarLocacao = async (req, res) => {
     try {
         const { id } = req.params;
         const locacao = await Locacao.findByPk(id, { transaction: t });
+        
         if (!locacao) {
             await t.rollback();
             return res.status(404).json({ message: 'Locação não encontrada.' });
         }
+        
+        if (locacao.finalizada) {
+            await t.rollback();
+            return res.status(400).json({ message: 'Locação já está finalizada.' });
+        }
+
         await locacao.update({ finalizada: true }, { transaction: t });
-        // *** MUDANÇA AQUI: Atualizando o status do carro para 'Disponível' ***
-        await Carro.update({ status: 'Disponível' }, { where: { id: locacao.carro_id }, transaction: t });
+        await Carro.update({ status: 'Disponível' }, { 
+            where: { id: locacao.carro_id }, 
+            transaction: t 
+        });
+        
         await t.commit();
-        res.json({ message: "Locação finalizada com sucesso." });
+        res.json({ 
+            message: "Locação finalizada com sucesso.",
+            locacao: await Locacao.findByPk(id, {
+                include: [{ model: Cliente }, { model: Carro }]
+            })
+        });
     } catch (error) {
         await t.rollback();
         res.status(500).json({ error: error.message });

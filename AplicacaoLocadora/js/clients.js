@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const API_URL = 'http://localhost:3000/api';
   let clients = [];
 
-  // Função para renderizar os clientes na tabela
+
   function renderClients() {
     clientsList.innerHTML = "";
     clients.forEach(client => {
@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Função para buscar os clientes da API
+
   function fetchClients() {
     fetch(`${API_URL}/clientes`)
       .then(res => res.json())
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .catch(err => console.error("Erro ao buscar clientes:", err));
   }
 
-  // Função para popular o formulário para edição
+  
   window.editClient = (id) => {
     const client = clients.find(c => c.id === id);
     if (client) {
@@ -51,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // Função para deletar um cliente
+
   window.deleteClient = (id) => {
     if (confirm("Tem certeza que deseja excluir este cliente?")) {
       fetch(`${API_URL}/clientes/${id}`, {
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // Evento de submit do formulário (para criar e editar)
+  
   clientForm.addEventListener("submit", (e) => {
     e.preventDefault();
     const id = parseInt(clientIdInput.value);
@@ -98,11 +98,11 @@ document.addEventListener("DOMContentLoaded", () => {
       clientForm.reset();
       clientIdInput.value = '';
       formTitle.textContent = "Adicionar Novo Cliente";
-      fetchClients(); // Atualiza a lista
+      fetchClients(); 
     })
     .catch(err => alert(`Erro ao salvar cliente: ${err.message}`));
   });
 
-  // Busca os clientes iniciais quando a página carrega
+  
   fetchClients();
 });

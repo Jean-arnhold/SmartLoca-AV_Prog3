@@ -48,7 +48,7 @@ exports.deleteCliente = async (req, res) => {
   try {
     const { id } = req.params;
     
-    // Opcional: Impedir exclusão se houver locações ativas
+ 
     const locacoesAtivas = await Locacao.count({ where: { cliente_id: id, finalizada: false } });
     if (locacoesAtivas > 0) {
       return res.status(400).json({ message: 'Não é possível excluir um cliente com locações ativas.' });

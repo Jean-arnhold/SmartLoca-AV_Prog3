@@ -4,7 +4,7 @@ const clienteController = require('../controllers/clienteController');
 
 router.get('/', clienteController.getAllClientes);
 router.post('/', clienteController.createCliente);
-router.put('/:id', clienteController.updateCliente); // Rota de atualização
-router.delete('/:id', clienteController.deleteCliente); // Rota de exclusão
+router.put('/:id', clienteController.updateCliente); 
+router.delete('/:id', clienteController.deleteCliente); 
 
 module.exports = router;

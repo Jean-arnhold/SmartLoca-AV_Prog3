@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       unique: true
     },
-    // *** MUDANÇA AQUI: de 'disponivel' (BOOLEAN) para 'status' (ENUM) ***
+   
     status: {
       type: DataTypes.ENUM('Disponível', 'Alugado', 'Manutenção'),
       defaultValue: 'Disponível',

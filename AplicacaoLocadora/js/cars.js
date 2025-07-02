@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cars.forEach(car => {
       const row = document.createElement("tr");
       
-      // *** MUDANÇA AQUI: Lendo o 'status' e definindo a cor ***
+      
       let statusClass = '';
       if (car.status === 'Disponível') statusClass = 'text-green-400';
       else if (car.status === 'Alugado') statusClass = 'text-yellow-400';
@@ -49,7 +49,6 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("carModel").value = car.modelo;
       document.getElementById("carYear").value = car.ano;
       document.getElementById("carPlate").value = car.placa;
-      // *** MUDANÇA AQUI: Usando o campo 'status' diretamente ***
       document.getElementById("carStatus").value = car.status; 
       formTitle.textContent = "Editar Veículo";
     }
@@ -70,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
     e.preventDefault();
     const id = parseInt(carIdInput.value);
     
-    // *** MUDANÇA AQUI: Enviando o campo 'status' diretamente ***
+   
     const carData = {
       marca: document.getElementById("carBrand").value,
       modelo: document.getElementById("carModel").value,

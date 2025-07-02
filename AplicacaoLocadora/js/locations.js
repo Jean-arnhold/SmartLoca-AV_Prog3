@@ -11,27 +11,32 @@ document.addEventListener("DOMContentLoaded", () => {
   let carros = [];
 
   function renderLocacoes() {
-    locationsList.innerHTML = "";
-    locacoes.forEach(loc => {
-      const clienteNome = loc.Cliente ? loc.Cliente.nome : "N/A";
-      const carroDesc = loc.Carro ? `${loc.Carro.modelo} (${loc.Carro.placa})` : "N/A";
-      
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td class="p-2">${clienteNome}</td>
-        <td class="p-2">${carroDesc}</td>
-        <td class="p-2">${loc.data_inicio} até ${loc.data_fim}</td>
-        <td class="p-2">R$ ${parseFloat(loc.valor_total).toFixed(2)}</td>
-        <td class="p-2">
-          <button class="text-blue-600 hover:underline" onclick="editLocation(${loc.id})">Editar</button>
-        </td>
-        <td class="p-2">
-          <button class="text-red-600 hover:underline" onclick="deleteLocation(${loc.id})">Excluir</button>
-        </td>
-      `;
-      locationsList.appendChild(row);
-    });
-  }
+  locationsList.innerHTML = "";
+  locacoes.forEach(loc => {
+    const clienteNome = loc.Cliente ? loc.Cliente.nome : "N/A";
+    const carroDesc = loc.Carro ? `${loc.Carro.modelo} (${loc.Carro.placa})` : "N/A";
+    
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td class="p-2">${clienteNome}</td>
+      <td class="p-2">${carroDesc}</td>
+      <td class="p-2">${loc.data_inicio} até ${loc.data_fim}</td>
+      <td class="p-2">R$ ${parseFloat(loc.valor_total).toFixed(2)}</td>
+      <td class="p-2">
+        <button class="text-blue-600 hover:underline" onclick="editLocation(${loc.id})">Editar</button>
+      </td>
+      <td class="p-2">
+        <button class="text-green-600 hover:underline" onclick="finalizeLocation(${loc.id})" ${loc.finalizada ? 'disabled class="text-gray-400"' : ''}>
+          ${loc.finalizada ? 'Finalizada' : 'Finalizar'}
+        </button>
+      </td>
+      <td class="p-2">
+        <button class="text-red-600 hover:underline" onclick="deleteLocation(${loc.id})">Excluir</button>
+      </td>
+    `;
+    locationsList.appendChild(row);
+  });
+}
 
   function populateClientesSelect() {
     locationClientSelect.innerHTML = '<option value="">Selecione um cliente</option>';
@@ -106,6 +111,23 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
   };
+
+  window.finalizeLocation = (id) => {
+  if (confirm("Tem certeza que deseja finalizar esta locação?")) {
+    fetch(`${API_URL}/locacoes/${id}/finalizar`, { 
+      method: 'PUT' 
+    })
+    .then(res => {
+      if (!res.ok) throw new Error("Erro ao finalizar locação.");
+      return res.json();
+    })
+    .then(() => {
+      alert("Locação finalizada com sucesso!");
+      Promise.all([fetchLocacoes(), fetchCarros()]);
+    })
+    .catch(err => alert(`Erro: ${err.message}`));
+  }
+};
 
   locationForm.addEventListener("submit", (e) => {
     e.preventDefault();

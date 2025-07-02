@@ -1,7 +1,7 @@
 const { Carro, Locacao } = require('../models');
 const yup = require('yup');
 
-// *** MUDANÇA AQUI: Validando o novo campo 'status' ***
+
 const carroSchema = yup.object().shape({
     marca: yup.string().required(),
     modelo: yup.string().required(),
