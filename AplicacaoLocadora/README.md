@@ -20,9 +20,6 @@ O projeto foi construído com as seguintes tecnologias:
     *  **Tailwind CSS (via CDN)**: Framework CSS para estilização.
     *  **JavaScript (Vanilla)**: Manipulação do DOM e comunicação com o backend.
 
-* **Ambiente**:
-    * **XAMPP**: Pacote que provê o servidor Apache (para servir o frontend) e o banco de dados MySQL/MariaDB.
-
 ## Pré-requisitos
 
 Antes de começar, garanta que você tenha os seguintes softwares instalados em sua máquina:
@@ -81,19 +78,12 @@ Com o ambiente configurado, siga estes passos para rodar o sistema completo:
 3.  O terminal deve exibir uma mensagem de sucesso, indicando que o servidor está rodando na porta 3000 e conectado ao banco de dados.
     > **Deixe este terminal aberto!** Ele é o seu backend.
 
-### 2. Servir o Frontend
 
-1.  Copie a pasta inteira do projeto (`AplicacaoLocadora`) da sua pasta do GitHub.
-2.  Cole essa pasta dentro do diretório `htdocs` da sua instalação do XAMPP (geralmente em `C:\xampp\htdocs`).
-3.  Garanta que o **Apache** esteja rodando no painel do XAMPP.
+### 2. Acessar a Aplicação
 
-### 3. Acessar a Aplicação
+1.  Instale a extensão Live Server no VS CODE
+2.  Acesse a aplicação via Live Server no arquivo index.html
 
-1.  Abra seu navegador de internet (Chrome, Firefox, etc.).
-2.  Acesse o seguinte endereço:
-    ```
-    http://localhost/AplicacaoLocadora/pages/index.html
-    ```
 A aplicação estará totalmente funcional.
 
 ## Funcionalidades Implementadas
@@ -101,7 +91,7 @@ A aplicação estará totalmente funcional.
 O sistema permite o gerenciamento completo (CRUD - Criar, Ler, Editar, Deletar) das seguintes entidades:
 
 *  **Clientes**: Cadastro e listagem de clientes.
-*  **Carros**: Cadastro e listagem de veículos da frota, com controle de status (Disponível, Alugado, Manutenção).
+*  **Carros**: Cadastro e listagem de veículos da frota, com controle de status (Disponível ou Alugado).
 *  **Locações**: Registro de novas locações, associando um cliente a um carro disponível.
 
 ---
