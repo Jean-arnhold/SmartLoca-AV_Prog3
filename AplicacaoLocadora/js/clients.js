@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!res.ok) {
           return res.json().then(err => { throw new Error(err.message) });
         }
-        fetchClients(); // Atualiza a lista
+        fetchClients(); 
       })
       .catch(err => alert(`Erro ao excluir cliente: ${err.message}`));
     }

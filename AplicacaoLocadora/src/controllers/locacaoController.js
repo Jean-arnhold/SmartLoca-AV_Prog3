@@ -1,13 +1,16 @@
 const { Locacao, Carro, Cliente, sequelize } = require('../models');
+const { Op } = require("sequelize");
 const yup = require('yup');
 
+
 const locacaoSchema = yup.object().shape({
-    cliente_id: yup.number().integer().required(),
-    carro_id: yup.number().integer().required(),
-    data_inicio: yup.date().required(),
-    data_fim: yup.date().required().min(yup.ref('data_inicio')),
-    valor_total: yup.number().required()
+    cliente_id: yup.number().integer().required("O cliente é obrigatório."),
+    carro_id: yup.number().integer().required("O carro é obrigatório."),
+    data_inicio: yup.date().required("A data de início é obrigatória.").min(new Date(), "A data de início não pode ser no passado."),
+    data_fim: yup.date().required("A data de fim é obrigatória.").min(yup.ref('data_inicio'), "A data de fim deve ser após a data de início."),
+    valor_total: yup.number().required("O valor total é obrigatório.").positive("O valor total deve ser um número positivo.")
 });
+
 
 exports.getAllLocacoes = async (req, res) => {
     try {
@@ -25,7 +28,28 @@ exports.createLocacao = async (req, res) => {
     const t = await sequelize.transaction();
     try {
         await locacaoSchema.validate(req.body);
-        const { carro_id } = req.body;
+        const { carro_id, data_inicio, data_fim } = req.body;
+
+        const locacaoExistente = await Locacao.findOne({
+            where: {
+                carro_id: carro_id,
+                finalizada: false,
+                [Op.or]: [
+                    { data_inicio: { [Op.between]: [data_inicio, data_fim] } },
+                    { data_fim: { [Op.between]: [data_inicio, data_fim] } },
+                    { [Op.and]: [
+                        { data_inicio: { [Op.lte]: data_inicio } },
+                        { data_fim: { [Op.gte]: data_fim } }
+                    ]}
+                ]
+            },
+            transaction: t
+        });
+
+        if (locacaoExistente) {
+            await t.rollback();
+            return res.status(400).json({ message: 'O veículo já está reservado para este período.' });
+        }
 
         const carro = await Carro.findByPk(carro_id, { transaction: t });
         
@@ -35,7 +59,6 @@ exports.createLocacao = async (req, res) => {
         }
 
         const novaLocacao = await Locacao.create(req.body, { transaction: t });
-        
         await carro.update({ status: 'Alugado' }, { transaction: t });
 
         await t.commit();
@@ -62,7 +85,6 @@ exports.updateLocacao = async (req, res) => {
         const carroNovoId = req.body.carro_id;
 
         if (carroAntigoId !== carroNovoId) {
-            
             await Carro.update({ status: 'Disponível' }, { where: { id: carroAntigoId }, transaction: t });
             await Carro.update({ status: 'Alugado' }, { where: { id: carroNovoId }, transaction: t });
         }

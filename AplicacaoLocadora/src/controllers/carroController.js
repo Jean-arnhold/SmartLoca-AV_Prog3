@@ -5,8 +5,15 @@ const yup = require('yup');
 const carroSchema = yup.object().shape({
     marca: yup.string().required(),
     modelo: yup.string().required(),
-    ano: yup.number().integer().required(),
-    placa: yup.string().required(),
+    
+    ano: yup.number()
+             .integer()
+             .required()
+             .min(1900, "O ano deve ser superior a 1900.")
+             .max(new Date().getFullYear() + 1, "O ano não pode ser muito no futuro."), 
+    placa: yup.string()
+              .required()
+              .matches(/^[A-Z]{3}[0-9][A-Z][0-9]{2}$/, 'Formato de placa inválido (padrão Mercosul).'),
     status: yup.string().oneOf(['Disponível', 'Alugado', 'Manutenção']).optional()
 });
 

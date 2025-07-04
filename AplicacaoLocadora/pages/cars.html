@@ -1,93 +1,100 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Carros - Locadora</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background-color: #2c2c31;
-    }
-    ::-webkit-scrollbar-thumb {
-      background-color: #727275;
-      border-radius: 4px;
-    }
-  </style>
-</head>
-<body class="bg-[url('../fundo.jpg')] bg-no-repeat bg-center bg-cover min-h-screen text-white">
-  <div class="max-w-3xl mx-auto">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carros - Locadora</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background-color: #2c2c31;
+      }
+      ::-webkit-scrollbar-thumb {
+        background-color: #727275;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body class="bg-[url('../fundo.jpg')] bg-no-repeat bg-center bg-cover min-h-screen text-white">
+    <div class="max-w-3xl mx-auto">
 
-    <!-- Cabeçalho -->
-    <div class="flex justify-between items-center mb-6 mt-4">
-      <h1 class="text-2xl font-bold">🚗 Gerenciar Veículos</h1>
-      <a href="index.html" class="flex items-center gap-2 border border-white text-white px-3 py-1 rounded hover:bg-white hover:text-black transition">
-       ← Voltar
-      </a>
-    </div>
+      <!-- Cabeçalho -->
+      <div class="flex justify-between items-center mb-6 mt-4">
+        <h1 class="text-2xl font-bold">🚗 Gerenciar Veículos</h1>
+        <a href="index.html" class="flex items-center gap-2 border border-white text-white px-3 py-1 rounded hover:bg-white hover:text-black transition">
+          ← Voltar
+        </a>
+      </div>
 
-    <!-- Formulário de cadastro -->
-    <div class="bg-black/70 p-4 rounded-lg shadow mb-6">
-      <h2 class="font-semibold mb-3" id="carFormTitle">Adicionar Novo Veículo</h2>
-      <form id="carForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input type="hidden" id="carId">
-        
-        <div>
-          <label class="block text-sm font-medium mb-1">Marca</label>
-          <input type="text" id="carBrand" class="w-full p-2 border rounded bg-white text-black" required>
-        </div>
-        <div>
-          <label class="block text-sm font-medium mb-1">Modelo</label>
-          <input type="text" id="carModel" class="w-full p-2 border rounded bg-white text-black" required>
-        </div>
-        <div>
-          <label class="block text-sm font-medium mb-1">Ano</label>
-          <input type="number" id="carYear" class="w-full p-2 border rounded bg-white text-black" required>
-        </div>
-        <div>
-          <label class="block text-sm font-medium mb-1">Placa</label>
-          <input type="text" id="carPlate" class="w-full p-2 border rounded bg-white text-black" required>
-        </div>
-        <div>
-          <label class="block text-sm font-medium mb-1">Status</label>
-          <select id="carStatus" class="w-full p-2 border rounded bg-white text-black" required>
-            <option value="Disponível">Disponível</option>
-            <option value="Alugado">Alugado</option>
-            <option value="Manutenção">Manutenção</option>
-          </select>
-        </div>
+      <!-- Formulário de cadastro -->
+      <div class="bg-black/70 p-4 rounded-lg shadow mb-6">
+        <h2 class="font-semibold mb-3" id="carFormTitle">Adicionar Novo Veículo</h2>
+        <form id="carForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input type="hidden" id="carId">
 
-        <button type="submit" class="md:col-span-2 bg-orange-500 text-white p-2 rounded hover:bg-orange-600">
-          Salvar Veículo
-        </button>
-      </form>
-    </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Marca</label>
+            <input type="text" id="carBrand" class="w-full p-2 border rounded bg-white text-black" required>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Modelo</label>
+            <input type="text" id="carModel" class="w-full p-2 border rounded bg-white text-black" required>
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Ano</label>
+            <input type="number" id="carYear" class="w-full p-2 border rounded bg-white text-black"
+              required
+              min="1950"
+              max="2026"
+              title="O ano deve ser entre 1950 e 2026.">
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Placa</label>
+            <input type="text" id="carPlate" class="w-full p-2 border rounded bg-white text-black"
+              required
+              pattern="[A-Z]{3}[0-9][A-Z][0-9]{2}"
+              title="A placa deve estar no formato Mercosul: AAA1A11.">
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">Status</label>
+            <select id="carStatus" class="w-full p-2 border rounded bg-white text-black" required>
+              <option value="Disponível">Disponível</option>
+              <option value="Alugado">Alugado</option>
+              <option value="Manutenção">Manutenção</option>
+            </select>
+          </div>
 
-    <!-- Lista de carros -->
-    <div class="bg-black/70 p-4 rounded-lg shadow">
-      <h2 class="font-semibold mb-3">Veículos Cadastrados</h2>
-      <div class="overflow-x-auto">
-        <table class="min-w-full text-white" id="carsTable">
-          <thead>
-            <tr class="bg-gray-800">
-              <th class="p-2 text-left">Marca</th>
-              <th class="p-2 text-left">Modelo</th>
-              <th class="p-2 text-left">Placa</th>
-              <th class="p-2 text-left">Status</th>
-              <th class="p-2 text-center" colspan="2">Ações</th>
-            </tr>
-          </thead>
-          <tbody id="carsList">
-           
-          </tbody>
-        </table>
+          <button type="submit" class="md:col-span-2 bg-orange-500 text-white p-2 rounded hover:bg-orange-600">
+            Salvar Veículo
+          </button>
+        </form>
+      </div>
+
+      <!-- Lista de carros -->
+      <div class="bg-black/70 p-4 rounded-lg shadow">
+        <h2 class="font-semibold mb-3">Veículos Cadastrados</h2>
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-white" id="carsTable">
+            <thead>
+              <tr class="bg-gray-800">
+                <th class="p-2 text-left">Marca</th>
+                <th class="p-2 text-left">Modelo</th>
+                <th class="p-2 text-left">Placa</th>
+                <th class="p-2 text-left">Status</th>
+                <th class="p-2 text-center" colspan="2">Ações</th>
+              </tr>
+            </thead>
+            <tbody id="carsList">
+
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-  </div>
 
-  <script src="../js/cars.js"></script>
-</body>
+    <script src="../js/cars.js"></script>
+  </body>
 </html>

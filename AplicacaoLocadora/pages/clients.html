@@ -40,7 +40,10 @@
         </div>
         <div>
           <label class="block text-sm font-medium mb-1">CPF</label>
-          <input type="text" id="clientCpf" class="w-full p-2 border rounded bg-white text-black" required>
+          <input type="text" id="clientCpf" class="w-full p-2 border rounded bg-white text-black" 
+       required 
+       pattern="[0-9]{11}" 
+       title="O CPF deve conter exatamente 11 dígitos, sem pontos ou traços.">
         </div>
         <div>
           <label class="block text-sm font-medium mb-1">Telefone</label>
