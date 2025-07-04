@@ -2,7 +2,6 @@ const { Locacao, Carro, Cliente, sequelize } = require('../models');
 const { Op } = require("sequelize");
 const yup = require('yup');
 
-
 const locacaoSchema = yup.object().shape({
     cliente_id: yup.number().integer().required("O cliente é obrigatório."),
     carro_id: yup.number().integer().required("O carro é obrigatório."),
@@ -10,7 +9,6 @@ const locacaoSchema = yup.object().shape({
     data_fim: yup.date().required("A data de fim é obrigatória.").min(yup.ref('data_inicio'), "A data de fim deve ser após a data de início."),
     valor_total: yup.number().required("O valor total é obrigatório.").positive("O valor total deve ser um número positivo.")
 });
-
 
 exports.getAllLocacoes = async (req, res) => {
     try {
@@ -37,10 +35,12 @@ exports.createLocacao = async (req, res) => {
                 [Op.or]: [
                     { data_inicio: { [Op.between]: [data_inicio, data_fim] } },
                     { data_fim: { [Op.between]: [data_inicio, data_fim] } },
-                    { [Op.and]: [
-                        { data_inicio: { [Op.lte]: data_inicio } },
-                        { data_fim: { [Op.gte]: data_fim } }
-                    ]}
+                    {
+                        [Op.and]: [
+                            { data_inicio: { [Op.lte]: data_inicio } },
+                            { data_fim: { [Op.gte]: data_fim } }
+                        ]
+                    }
                 ]
             },
             transaction: t
@@ -52,7 +52,7 @@ exports.createLocacao = async (req, res) => {
         }
 
         const carro = await Carro.findByPk(carro_id, { transaction: t });
-        
+
         if (!carro || carro.status !== 'Disponível') {
             await t.rollback();
             return res.status(400).json({ message: 'Carro não encontrado ou indisponível.' });
@@ -90,14 +90,14 @@ exports.updateLocacao = async (req, res) => {
         }
 
         const [updated] = await Locacao.update(req.body, { where: { id: id }, transaction: t });
-        
+
         await t.commit();
-        
+
         if (updated) {
             const updatedLocacao = await Locacao.findByPk(id);
             res.json(updatedLocacao);
         } else {
-             res.status(404).json({ message: 'Locação não encontrada.' });
+            res.status(404).json({ message: 'Locação não encontrada.' });
         }
 
     } catch (error) {
@@ -117,9 +117,9 @@ exports.deleteLocacao = async (req, res) => {
         }
 
         await Carro.update({ status: 'Disponível' }, { where: { id: locacao.carro_id }, transaction: t });
-        
+
         await locacao.destroy({ transaction: t });
-        
+
         await t.commit();
         res.status(204).send();
     } catch (error) {
@@ -133,25 +133,25 @@ exports.finalizarLocacao = async (req, res) => {
     try {
         const { id } = req.params;
         const locacao = await Locacao.findByPk(id, { transaction: t });
-        
+
         if (!locacao) {
             await t.rollback();
             return res.status(404).json({ message: 'Locação não encontrada.' });
         }
-        
+
         if (locacao.finalizada) {
             await t.rollback();
             return res.status(400).json({ message: 'Locação já está finalizada.' });
         }
 
         await locacao.update({ finalizada: true }, { transaction: t });
-        await Carro.update({ status: 'Disponível' }, { 
-            where: { id: locacao.carro_id }, 
-            transaction: t 
+        await Carro.update({ status: 'Disponível' }, {
+            where: { id: locacao.carro_id },
+            transaction: t
         });
-        
+
         await t.commit();
-        res.json({ 
+        res.json({
             message: "Locação finalizada com sucesso.",
             locacao: await Locacao.findByPk(id, {
                 include: [{ model: Cliente }, { model: Carro }]
