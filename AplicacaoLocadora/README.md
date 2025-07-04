@@ -16,7 +16,7 @@ O projeto foi construído com as seguintes tecnologias:
     * **Yup**: Biblioteca para validação de schemas e dados.
 
 * **Frontend**:
-    *  **HTML5
+    *  **HTML5**
     *  **Tailwind CSS (via CDN)**: Framework CSS para estilização.
     *  **JavaScript (Vanilla)**: Manipulação do DOM e comunicação com o backend.
 
