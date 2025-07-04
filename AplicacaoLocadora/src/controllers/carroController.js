@@ -14,7 +14,7 @@ const carroSchema = yup.object().shape({
     placa: yup.string()
               .required()
               .matches(/^[A-Z]{3}[0-9][A-Z][0-9]{2}$/, 'Formato de placa inválido (padrão Mercosul).'),
-    status: yup.string().oneOf(['Disponível', 'Alugado', 'Manutenção']).optional()
+    status: yup.string().oneOf(['Disponível', 'Alugado']).optional()
 });
 
 exports.getAllCarros = async (req, res) => {

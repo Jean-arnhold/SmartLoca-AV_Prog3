@@ -16,7 +16,6 @@ document.addEventListener("DOMContentLoaded", () => {
       let statusClass = '';
       if (car.status === 'Disponível') statusClass = 'text-green-400';
       else if (car.status === 'Alugado') statusClass = 'text-yellow-400';
-      else if (car.status === 'Manutenção') statusClass = 'text-orange-400';
       
       row.innerHTML = `
         <td class="p-2">${car.marca}</td>
